@@ -1,3 +1,5 @@
+// B''H
+
 package main
 
 import (
@@ -6,11 +8,19 @@ import (
 )
 
 func pinky(writer http.ResponseWriter, request *http.Request) {
-	fmt.Fprintf(writer, "NARF!")
+	fmt.Fprintf(writer, "NARF")
 }
 
 func brain(writer http.ResponseWriter, request *http.Request) {
-	fmt.Fprintf(writer, "Try to take over the world!")
+	fmt.Fprintf(writer, "Are you pondering what I'm pondering?")
+}
+
+func dunno(writer http.ResponseWriter, request *http.Request) {
+	fmt.Fprintf(writer, "I dunno, Brain. Do we have enough %s for that?", request.URL.Path[7:])
+}
+
+func handler(writer http.ResponseWriter, request *http.Request) {
+	fmt.Fprintf(writer, "Same thing we do every night, %s. Try to take over the world!", request.URL.Path[1:])
 }
 
 func main() {
@@ -33,12 +43,14 @@ func main() {
 			For details see: https://pkg.go.dev/net/http?tab=doc#Server
 	*/
 
-	server := http.Server{
+	var server http.Server = http.Server{
 		Addr: "127.0.0.1:8090",
 	}
 
 	http.HandleFunc("/pinky", pinky)
 	http.HandleFunc("/brain", brain)
+	http.HandleFunc("/dunno/", dunno)
+	http.HandleFunc("/", handler)
 
 	server.ListenAndServe()
 }
